@@ -3,6 +3,14 @@ from database import connect_db, execute_query, fetch_query
 
 app = Flask(__name__)
 
+# Configuración manual de CORS
+@app.after_request
+def add_cors_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    return response
+
 @app.route('/api/productores', methods=['GET', 'POST'])
 def manage_productores():
     if request.method == 'POST':

@@ -1,4 +1,6 @@
+// Inventario.jsx
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function Inventario() {
   const [inventarios, setInventarios] = useState([]);
@@ -9,42 +11,57 @@ function Inventario() {
 
   // Cargar los inventarios desde el backend
   useEffect(() => {
-    fetch('/api/inventario')
-      .then((res) => res.json())
-      .then((data) => setInventarios(data));
+    axios.get('http://localhost:5000/api/inventario')
+      .then(response => {
+        setInventarios(response.data);
+      })
+      .catch(error => {
+        console.error('Hubo un error al obtener los inventarios:', error);
+      });
   }, []);
 
   // Función para agregar un nuevo inventario
   const agregarInventario = () => {
-    fetch('/api/inventario', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ productor_id, fecha, litros, cliente }),
+    axios.post('http://localhost:5000/api/inventario', {
+      productor_id,
+      fecha,
+      litros,
+      cliente
     })
-      .then(() => {
-        setProductorId('');
-        setFecha('');
-        setLitros('');
-        setCliente('');
-        // Recargar inventarios después de agregar uno nuevo
-        return fetch('/api/inventario').then((res) => res.json());
-      })
-      .then((data) => setInventarios(data));
+    .then(response => {
+      console.log(response.data);
+      setProductorId('');
+      setFecha('');
+      setLitros('');
+      setCliente('');
+      // Recargar inventarios después de agregar uno nuevo
+      axios.get('http://localhost:5000/api/inventario')
+        .then(response => {
+          setInventarios(response.data);
+        });
+    })
+    .catch(error => {
+      console.error('Hubo un error al agregar el inventario:', error);
+    });
   };
 
   return (
     <div>
-      <h2>Inventario</h2>
-      
+      <h2>Inventario de Leche</h2>
+  
       {/* Mostrar inventarios existentes */}
       <ul>
-        {inventarios.map((inv) => (
-          <li key={inv[0]}>
-            {inv[2]} litros - Fecha: {inv[3]} - Cliente: {inv[4]} - Productor ID: {inv[1]}
-          </li>
-        ))}
+        {inventarios.length > 0 ? (
+          inventarios.map((inv) => (
+            <li key={inv[0]}>
+              {inv[2]} litros - Fecha: {inv[3]} - Cliente: {inv[4]} - Productor ID: {inv[1]}
+            </li>
+          ))
+        ) : (
+          <p>No hay inventarios disponibles.</p>
+        )}
       </ul>
-      
+
       {/* Formulario para agregar inventario */}
       <div>
         <input

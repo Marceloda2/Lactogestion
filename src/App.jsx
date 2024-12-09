@@ -1,94 +1,97 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import Inventario from './Inventario';
+import Productores from './Productores';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Icon } from '@iconify/react'; // Importar Iconify
 
 function App() {
-  const [inventarios, setInventarios] = useState([]);
-  const [productor_id, setProductorId] = useState('');
-  const [fecha, setFecha] = useState('');
-  const [litros, setLitros] = useState('');
-  const [cliente, setCliente] = useState('');
-
-  // Cargar los inventarios desde el backend
-  useEffect(() => {
-    axios.get('http://localhost:5000/api/inventario')
-      .then(response => {
-        setInventarios(response.data);
-      })
-      .catch(error => {
-        console.error('Hubo un error al obtener los inventarios:', error);
-      });
-  }, []);
-
-  // Función para agregar un nuevo inventario
-  const agregarInventario = () => {
-    axios.post('http://localhost:5000/api/inventario', {
-      productor_id,
-      fecha,
-      litros,
-      cliente
-    })
-    .then(response => {
-      console.log(response.data);
-      setProductorId('');
-      setFecha('');
-      setLitros('');
-      setCliente('');
-      // Recargar inventarios después de agregar uno nuevo
-      axios.get('http://localhost:5000/api/inventario')
-        .then(response => {
-          setInventarios(response.data);
-        });
-    })
-    .catch(error => {
-      console.error('Hubo un error al agregar el inventario:', error);
-    });
-  };
+  const [showInventario, setShowInventario] = useState(false);
+  const [showProductores, setShowProductores] = useState(false);
 
   return (
-    <div>
-      <h2>Inventario de Leche</h2>
+    <div className="container mt-5">
+      <h1 className="text-center">Bienvenido a LactoGestión</h1>
+      <div className="d-flex justify-content-center gap-3 mt-4">
+        {/* Botón de Inventario con ícono */}
+        <button
+          className="btn btn-primary d-flex align-items-center gap-2"
+          onClick={() => setShowInventario(true)}
+        >
+          <Icon icon="mdi:clipboard-list-outline" width="24" /> Inventario
+        </button>
 
-      {/* Mostrar inventarios existentes */}
-      <ul>
-        {inventarios.length > 0 ? (
-          inventarios.map((inv) => (
-            <li key={inv[0]}>
-              {inv[2]} litros - Fecha: {inv[3]} - Cliente: {inv[4]} - Productor ID: {inv[1]}
-            </li>
-          ))
-        ) : (
-          <p>No hay inventarios disponibles.</p>
-        )}
-      </ul>
-
-      {/* Formulario para agregar inventario */}
-      <div>
-        <input
-          type="text"
-          placeholder="Productor ID"
-          value={productor_id}
-          onChange={(e) => setProductorId(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Fecha"
-          value={fecha}
-          onChange={(e) => setFecha(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Litros"
-          value={litros}
-          onChange={(e) => setLitros(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Cliente"
-          value={cliente}
-          onChange={(e) => setCliente(e.target.value)}
-        />
-        <button onClick={agregarInventario}>Agregar Inventario</button>
+        {/* Botón de Productores con ícono */}
+        <button
+          className="btn btn-secondary d-flex align-items-center gap-2"
+          onClick={() => setShowProductores(true)}
+        >
+          <Icon icon="mdi:account-group-outline" width="24" /> Productores
+        </button>
       </div>
+
+      {/* Modal para Inventario */}
+      {showInventario && (
+        <div className="modal show d-block" tabIndex="-1" role="dialog">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">
+                  <Icon icon="mdi:clipboard-list-outline" width="24" /> Inventario
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowInventario(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <Inventario />
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowInventario(false)}
+                >
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal para Productores */}
+      {showProductores && (
+        <div className="modal show d-block" tabIndex="-1" role="dialog">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">
+                  <Icon icon="mdi:account-group-outline" width="24" /> Productores
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowProductores(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <Productores />
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowProductores(false)}
+                >
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
