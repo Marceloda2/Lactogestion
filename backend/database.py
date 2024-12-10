@@ -14,6 +14,31 @@ def connect_db():
                         litros REAL,
                         cliente TEXT,
                         FOREIGN KEY (productor_id) REFERENCES productores(id))''')
+      # Tabla de recepción
+    cursor.execute('''CREATE TABLE IF NOT EXISTS recepcion (
+                        id INTEGER PRIMARY KEY,
+                        codigo TEXT,
+                        nombre TEXT,
+                        volumen REAL,
+                        tanque TEXT,
+                        densidad REAL,
+                        alcohol_85 REAL,
+                        antibiotico TEXT,
+                        observaciones TEXT)''')
+
+    # Tabla de despacho
+    cursor.execute('''CREATE TABLE IF NOT EXISTS despacho (
+                        id INTEGER PRIMARY KEY,
+                        fecha TEXT,
+                        hora_salida TEXT,
+                        tanque TEXT,
+                        volumen REAL,
+                        temperatura_salida REAL,
+                        destino TEXT,
+                        responsable TEXT,
+                        firma TEXT,
+                        observaciones TEXT)''')
+    
     conn.commit()
     conn.close()
 
