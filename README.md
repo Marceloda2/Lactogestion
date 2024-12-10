@@ -1,3 +1,0 @@
-
-# Lactogestion
-Proyecto de Emprendimiento
