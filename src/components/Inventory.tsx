@@ -67,75 +67,75 @@ export function Inventory() {
   return (
     <div className="p-6">
       {error && (
-        <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
+        <div className="mb-4 bg-accent-red/10 border border-accent-red text-accent-red px-4 py-3 rounded">
           {error}
         </div>
       )}
       
-      <div className="mb-6 bg-white rounded-lg shadow p-4">
-        <h3 className="text-lg font-semibold mb-4">Agregar al Inventario</h3>
+      <div className="mb-6 bg-primary-white rounded-lg shadow-lg p-4">
+        <h3 className="text-lg font-semibold mb-4 text-primary-navy">Agregar al Inventario</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <input
             type="text"
             placeholder="ID Productor"
-            className="border rounded p-2"
+            className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none"
             value={newItem.productor_id}
             onChange={(e) => setNewItem({ ...newItem, productor_id: e.target.value })}
           />
           <input
             type="date"
-            className="border rounded p-2"
+            className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none"
             value={newItem.fecha}
             onChange={(e) => setNewItem({ ...newItem, fecha: e.target.value })}
           />
           <input
             type="number"
             placeholder="Litros"
-            className="border rounded p-2"
+            className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none"
             value={newItem.litros || ''}
             onChange={(e) => setNewItem({ ...newItem, litros: Number(e.target.value) })}
           />
           <input
             type="text"
             placeholder="Cliente"
-            className="border rounded p-2"
+            className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none"
             value={newItem.cliente}
             onChange={(e) => setNewItem({ ...newItem, cliente: e.target.value })}
           />
           <button
             onClick={addItem}
-            className="bg-blue-500 text-white rounded p-2 flex items-center justify-center gap-2 col-span-full hover:bg-blue-600 transition-colors"
+            className="bg-primary-navy text-primary-white rounded p-2 flex items-center justify-center gap-2 col-span-full hover:bg-primary-navy/90 transition-colors"
           >
             <PlusCircle size={20} /> Agregar al Inventario
           </button>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-primary-white rounded-lg shadow-lg overflow-hidden">
         <table className="min-w-full">
           <thead>
-            <tr className="bg-gray-50">
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <tr className="bg-primary-blue/20">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary-navy uppercase tracking-wider">
                 ID Productor
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary-navy uppercase tracking-wider">
                 Fecha
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary-navy uppercase tracking-wider">
                 Litros
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary-navy uppercase tracking-wider">
                 Cliente
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-primary-white divide-y divide-accent-gray">
             {items.map((item) => (
-              <tr key={item.id}>
-                <td className="px-6 py-4 whitespace-nowrap">{item.productor_id}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{item.fecha}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{item.litros} L</td>
-                <td className="px-6 py-4 whitespace-nowrap">{item.cliente}</td>
+              <tr key={item.id} className="hover:bg-secondary-yellow/5">
+                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{item.productor_id}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{item.fecha}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{item.litros} L</td>
+                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{item.cliente}</td>
               </tr>
             ))}
           </tbody>

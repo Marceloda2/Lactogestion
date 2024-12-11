@@ -47,49 +47,49 @@ export function Producers() {
 
   return (
     <div className="p-6">
-      <div className="mb-6 bg-white rounded-lg shadow p-4">
-        <h3 className="text-lg font-semibold mb-4">Agregar Productor</h3>
+      <div className="mb-6 bg-primary-white rounded-lg shadow-lg p-4">
+        <h3 className="text-lg font-semibold mb-4 text-primary-navy">Agregar Productor</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
             type="text"
             placeholder="Nombre"
-            className="border rounded p-2"
+            className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none"
             value={newProducer.nombre}
             onChange={(e) => setNewProducer({ ...newProducer, nombre: e.target.value })}
           />
           <input
             type="text"
             placeholder="Teléfono"
-            className="border rounded p-2"
+            className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none"
             value={newProducer.telefono}
             onChange={(e) => setNewProducer({ ...newProducer, telefono: e.target.value })}
           />
           <button
             onClick={addProducer}
-            className="bg-purple-500 text-white rounded p-2 flex items-center justify-center gap-2 col-span-full"
+            className="bg-primary-navy text-primary-white rounded p-2 flex items-center justify-center gap-2 col-span-full hover:bg-primary-navy/90 transition-colors"
           >
             <PlusCircle size={20} /> Agregar Productor
           </button>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-primary-white rounded-lg shadow-lg overflow-hidden">
         <table className="min-w-full">
           <thead>
-            <tr className="bg-gray-50">
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <tr className="bg-primary-blue/20">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary-navy uppercase tracking-wider">
                 Nombre
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary-navy uppercase tracking-wider">
                 Teléfono
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-primary-white divide-y divide-accent-gray">
             {producers.map((producer) => (
-              <tr key={producer.id}>
-                <td className="px-6 py-4 whitespace-nowrap">{producer.nombre}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{producer.telefono}</td>
+              <tr key={producer.id} className="hover:bg-secondary-yellow/5">
+                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{producer.nombre}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{producer.telefono}</td>
               </tr>
             ))}
           </tbody>

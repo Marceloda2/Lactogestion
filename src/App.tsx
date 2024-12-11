@@ -5,19 +5,20 @@ import { Dispatch } from './components/Dispatch';
 import { Reception } from './components/Reception';
 import { Dashboard } from './components/Dashboard';
 import { ClipboardList, Users, TruckIcon, PackageCheck, LayoutDashboard } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'inventory':
+      case 'inventario':
         return <Inventory />;
-      case 'producers':
+      case 'productores':
         return <Producers />;
-      case 'dispatch':
+      case 'despacho':
         return <Dispatch />;
-      case 'reception':
+      case 'recepcion':
         return <Reception />;
       default:
         return <Dashboard />;
@@ -25,81 +26,61 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-lg">
+    <div className="min-h-screen bg-primary-white">
+      <nav className="bg-primary-blue shadow-lg">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between h-16">
             <div className="flex space-x-8">
-              <div className="flex-shrink-0 flex items-center">
-                <h1 className="text-xl font-bold text-gray-800">Sistema de Inventario</h1>
-              </div>
+              <motion.div 
+                className="flex-shrink-0 flex items-center"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <h1 className="text-xl font-bold text-primary-navy">LactoGestion</h1>
+              </motion.div>
               <div className="hidden md:flex space-x-8">
-                <button
-                  onClick={() => setActiveTab('dashboard')}
-                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                    activeTab === 'dashboard'
-                      ? 'border-indigo-500 text-gray-900'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  <LayoutDashboard className="w-5 h-5 mr-2" />
-                  Dashboard
-                </button>
-                <button
-                  onClick={() => setActiveTab('inventory')}
-                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                    activeTab === 'inventory'
-                      ? 'border-indigo-500 text-gray-900'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  <ClipboardList className="w-5 h-5 mr-2" />
-                  Inventario
-                </button>
-                <button
-                  onClick={() => setActiveTab('producers')}
-                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                    activeTab === 'producers'
-                      ? 'border-indigo-500 text-gray-900'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  <Users className="w-5 h-5 mr-2" />
-                  Productores
-                </button>
-                <button
-                  onClick={() => setActiveTab('dispatch')}
-                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                    activeTab === 'dispatch'
-                      ? 'border-indigo-500 text-gray-900'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  <TruckIcon className="w-5 h-5 mr-2" />
-                  Despacho
-                </button>
-                <button
-                  onClick={() => setActiveTab('reception')}
-                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                    activeTab === 'reception'
-                      ? 'border-indigo-500 text-gray-900'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  <PackageCheck className="w-5 h-5 mr-2" />
-                  Recepción
-                </button>
+                {['Inicio', 'inventario', 'productores', 'despacho', 'recepcion'].map((tab) => (
+                  <motion.button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                      activeTab === tab
+                        ? 'border-primary-navy text-primary-navy'
+                        : 'border-transparent text-primary-navy/70 hover:text-primary-navy hover:border-primary-navy/30'
+                    }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {tab === 'dashboard' && <LayoutDashboard className="w-5 h-5 mr-2" />}
+                    {tab === 'inventory' && <ClipboardList className="w-5 h-5 mr-2" />}
+                    {tab === 'producers' && <Users className="w-5 h-5 mr-2" />}
+                    {tab === 'dispatch' && <TruckIcon className="w-5 h-5 mr-2" />}
+                    {tab === 'reception' && <PackageCheck className="w-5 h-5 mr-2" />}
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </motion.button>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {renderContent()}
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 bg-secondary-yellow/10">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            {renderContent()}
+          </motion.div>
+        </AnimatePresence>
       </main>
     </div>
   );
 }
 
-export default App;
+export default App; 

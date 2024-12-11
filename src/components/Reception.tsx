@@ -78,14 +78,14 @@ export function Reception() {
 
   return (
     <div className="p-6">
-      <div className="mb-6 bg-white rounded-lg shadow p-4">
-        <h3 className="text-lg font-semibold mb-4">Nueva Recepción</h3>
+      <div className="mb-6 bg-primary-white rounded-lg shadow-lg p-4">
+        <h3 className="text-lg font-semibold mb-4 text-primary-navy">Nueva Recepción</h3>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
             name="codigo"
             type="text"
             placeholder="Código"
-            className="border rounded p-2"
+            className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none"
             value={newReception.codigo}
             onChange={handleChange}
             required
@@ -94,7 +94,7 @@ export function Reception() {
             name="nombre"
             type="text"
             placeholder="Nombre"
-            className="border rounded p-2"
+            className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none"
             value={newReception.nombre}
             onChange={handleChange}
             required
@@ -103,7 +103,7 @@ export function Reception() {
             name="volumen"
             type="number"
             placeholder="Volumen"
-            className="border rounded p-2"
+            className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none"
             value={newReception.volumen}
             onChange={handleChange}
             required
@@ -112,7 +112,7 @@ export function Reception() {
             name="tanque"
             type="text"
             placeholder="Tanque"
-            className="border rounded p-2"
+            className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none"
             value={newReception.tanque}
             onChange={handleChange}
             required
@@ -122,7 +122,7 @@ export function Reception() {
             type="number"
             step="0.01"
             placeholder="Densidad"
-            className="border rounded p-2"
+            className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none"
             value={newReception.densidad}
             onChange={handleChange}
           />
@@ -131,7 +131,7 @@ export function Reception() {
             type="number"
             step="0.01"
             placeholder="Alcohol 85%"
-            className="border rounded p-2"
+            className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none"
             value={newReception.alcohol_85}
             onChange={handleChange}
           />
@@ -139,59 +139,59 @@ export function Reception() {
             name="antibiotico"
             type="text"
             placeholder="Antibiótico"
-            className="border rounded p-2"
+            className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none"
             value={newReception.antibiotico}
             onChange={handleChange}
           />
           <textarea
             name="observaciones"
             placeholder="Observaciones"
-            className="border rounded p-2"
+            className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none col-span-2"
             value={newReception.observaciones}
             onChange={handleChange}
           />
           <button
             type="submit"
-            className="bg-indigo-500 text-white rounded p-2 flex items-center justify-center gap-2 col-span-full"
+            className="bg-primary-navy text-primary-white rounded p-2 flex items-center justify-center gap-2 col-span-2 hover:bg-primary-navy/90 transition-colors"
           >
             <PlusCircle size={20} /> Agregar Recepción
           </button>
         </form>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-primary-white rounded-lg shadow-lg overflow-hidden">
         <table className="min-w-full">
           <thead>
-            <tr className="bg-gray-50">
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <tr className="bg-primary-blue/20">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary-navy uppercase tracking-wider">
                 Código
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary-navy uppercase tracking-wider">
                 Nombre
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary-navy uppercase tracking-wider">
                 Volumen
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary-navy uppercase tracking-wider">
                 Tanque
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary-navy uppercase tracking-wider">
                 Densidad
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary-navy uppercase tracking-wider">
                 Alcohol 85%
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-primary-white divide-y divide-accent-gray">
             {receptions.map((reception) => (
-              <tr key={reception.id}>
-                <td className="px-6 py-4 whitespace-nowrap">{reception.codigo}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{reception.nombre}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{reception.volumen} L</td>
-                <td className="px-6 py-4 whitespace-nowrap">{reception.tanque}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{reception.densidad}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{reception.alcohol_85}%</td>
+              <tr key={reception.id} className="hover:bg-secondary-yellow/5">
+                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{reception.codigo}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{reception.nombre}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{reception.volumen} L</td>
+                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{reception.tanque}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{reception.densidad}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{reception.alcohol_85}%</td>
               </tr>
             ))}
           </tbody>
