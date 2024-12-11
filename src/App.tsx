@@ -7,6 +7,7 @@ import { Dashboard } from './components/Dashboard';
 import { ClipboardList, Users, TruckIcon, PackageCheck, LayoutDashboard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
 
@@ -52,11 +53,11 @@ function App() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    {tab === 'dashboard' && <LayoutDashboard className="w-5 h-5 mr-2" />}
-                    {tab === 'inventory' && <ClipboardList className="w-5 h-5 mr-2" />}
-                    {tab === 'producers' && <Users className="w-5 h-5 mr-2" />}
-                    {tab === 'dispatch' && <TruckIcon className="w-5 h-5 mr-2" />}
-                    {tab === 'reception' && <PackageCheck className="w-5 h-5 mr-2" />}
+                    {tab === 'Inicio' && <LayoutDashboard className="w-5 h-5 mr-2" />}
+                    {tab === 'inventario' && <ClipboardList className="w-5 h-5 mr-2" />}
+                    {tab === 'productores' && <Users className="w-5 h-5 mr-2" />}
+                    {tab === 'despacho' && <TruckIcon className="w-5 h-5 mr-2" />}
+                    {tab === 'recepcion' && <PackageCheck className="w-5 h-5 mr-2" />}
                     {tab.charAt(0).toUpperCase() + tab.slice(1)}
                   </motion.button>
                 ))}
