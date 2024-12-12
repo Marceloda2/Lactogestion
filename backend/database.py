@@ -17,7 +17,8 @@ def connect_db():
       # Tabla de recepción
     cursor.execute('''CREATE TABLE IF NOT EXISTS recepcion (
                         id INTEGER PRIMARY KEY,
-                        codigo TEXT,
+                        fecha TEXT,
+                        hora_entrada TEXT,
                         nombre TEXT,
                         volumen REAL,
                         tanque TEXT,

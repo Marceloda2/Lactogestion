@@ -7,9 +7,8 @@ import { Dashboard } from './components/Dashboard';
 import { ClipboardList, Users, TruckIcon, PackageCheck, LayoutDashboard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-
 function App() {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('inicio');
 
   const renderContent = () => {
     switch (activeTab) {
@@ -38,10 +37,10 @@ function App() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <h1 className="text-xl font-bold text-primary-navy">LactoGestion</h1>
+                <h1 className="text-xl font-bold text-primary-navy">Sistema de Inventario</h1>
               </motion.div>
               <div className="hidden md:flex space-x-8">
-                {['Inicio', 'inventario', 'productores', 'despacho', 'recepcion'].map((tab) => (
+                {['inicio', 'inventario', 'despacho', 'recepcion','productores',].map((tab) => (
                   <motion.button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
@@ -53,11 +52,11 @@ function App() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    {tab === 'Inicio' && <LayoutDashboard className="w-5 h-5 mr-2" />}
+                    {tab === 'inicio' && <LayoutDashboard className="w-5 h-5 mr-2" />}
                     {tab === 'inventario' && <ClipboardList className="w-5 h-5 mr-2" />}
-                    {tab === 'productores' && <Users className="w-5 h-5 mr-2" />}
                     {tab === 'despacho' && <TruckIcon className="w-5 h-5 mr-2" />}
                     {tab === 'recepcion' && <PackageCheck className="w-5 h-5 mr-2" />}
+                    {tab === 'productores' && <Users className="w-5 h-5 mr-2" />}
                     {tab.charAt(0).toUpperCase() + tab.slice(1)}
                   </motion.button>
                 ))}
@@ -84,4 +83,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;

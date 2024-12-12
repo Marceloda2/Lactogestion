@@ -45,7 +45,8 @@ def manage_inventario():
 def manage_recepcion():
     if request.method == 'POST':
         data = request.json
-        codigo = data.get('codigo')
+        fecha = data.get('fecha')
+        hora_entrada = data.get('hora_entrada')
         nombre = data.get('nombre')
         volumen = data.get('volumen')
         tanque = data.get('tanque')
@@ -53,12 +54,12 @@ def manage_recepcion():
         alcohol_85 = data.get('alcohol_85')
         antibiotico = data.get('antibiotico')
         observaciones = data.get('observaciones')
-        if codigo and nombre and volumen:
+        if fecha and hora_entrada and nombre and volumen:
             execute_query(
                 '''INSERT INTO recepcion 
-                   (codigo, nombre, volumen, tanque, densidad, alcohol_85, antibiotico, observaciones) 
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
-                (codigo, nombre, volumen, tanque, densidad, alcohol_85, antibiotico, observaciones)
+                   (fecha, hora_entrada, nombre, volumen, tanque, densidad, alcohol_85, antibiotico, observaciones) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                (fecha, hora_entrada, nombre, volumen, tanque, densidad, alcohol_85, antibiotico, observaciones)
             )
             return jsonify({"message": "Recepción registrada"}), 201
         return jsonify({"error": "Datos incompletos"}), 400
@@ -89,6 +90,42 @@ def manage_despacho():
         return jsonify({"error": "Datos incompletos"}), 400
     despacho = fetch_query("SELECT * FROM despacho")
     return jsonify(despacho)
+@app.route('/api/recepcion/<int:id>', methods=['PUT', 'DELETE'])
+def modify_recepcion(id):
+    if request.method == 'PUT':
+        data = request.json
+        query = '''UPDATE recepcion 
+                   SET fecha = ?, hora_entrada = ?, nombre = ?, volumen = ?, 
+                       tanque = ?, densidad = ?, alcohol_85 = ?, antibiotico = ?, observaciones = ? 
+                   WHERE id = ?'''
+        params = (
+            data.get('fecha'), data.get('hora_entrada'), data.get('nombre'), data.get('volumen'),
+            data.get('tanque'), data.get('densidad'), data.get('alcohol_85'), data.get('antibiotico'),
+            data.get('observaciones'), id
+        )
+        execute_query(query, params)
+        return jsonify({"message": "Recepción actualizada"}), 200
+    elif request.method == 'DELETE':
+        execute_query("DELETE FROM recepcion WHERE id = ?", (id,))
+        return jsonify({"message": "Recepción eliminada"}), 200
+
+@app.route('/api/despacho/<int:id>', methods=['PUT', 'DELETE'])
+def modify_despacho(id):
+    if request.method == 'PUT':
+        data = request.json
+        query = '''UPDATE despacho 
+                   SET fecha = ?, hora_salida = ?, tanque = ?, volumen = ?, 
+                       temperatura_salida = ?, destino = ?, responsable = ?, firma = ?, observaciones = ? 
+                   WHERE id = ?'''
+        params = (
+            data.get('fecha'), data.get('hora_salida'), data.get('tanque'), data.get('volumen'),
+            data.get('temperatura_salida'), data.get('destino'), data.get('responsable'),
+            data.get('firma'), data.get('observaciones'), id
+        )
+        execute_query(query, params)
+        return jsonify({"message": "Despacho actualizado"}), 200
+    elif request.method == 'DELETE':
+        execute_query("DELETE FROM despacho WHERE id = ?", (id,))
 
 if __name__ == '__main__':
     connect_db()
