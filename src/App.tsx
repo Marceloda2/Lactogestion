@@ -1,46 +1,63 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { AuthProvider, useAuth } from './components/auth/AuthProvider';
+import { LoginPage } from './pages/LoginPage';
+import { Dashboard } from './components/Dashboard';
 import { Inventory } from './components/Inventory';
 import { Producers } from './components/Producers';
-import { Dispatch } from './components/Dispatch';
-import { Reception } from './components/Reception';
-import { Dashboard } from './components/Dashboard';
-import { ClipboardList, Users, TruckIcon, PackageCheck, LayoutDashboard } from 'lucide-react';
+import { ProducerMilkTotals } from './components/user/ProducerMilkTotals';
+import { ClipboardList, Users, LayoutDashboard, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Reception } from './components/Reception';
+import { Dispatch } from './components/Dispatch';
 
-function App() {
-  const [activeTab, setActiveTab] = useState('inicio');
+function AppContent() {
+  const { isAuthenticated, logout, user } = useAuth();
+  const [activeTab, setActiveTab] = React.useState('dashboard');
 
+  // Renderiza el contenido según la pestaña activa y el rol del usuario
   const renderContent = () => {
+    if (user?.role === 'user') {
+      return <ProducerMilkTotals />;
+    }
+
     switch (activeTab) {
       case 'inventario':
         return <Inventory />;
       case 'productores':
         return <Producers />;
-      case 'despacho':
-        return <Dispatch />;
       case 'recepcion':
         return <Reception />;
+      case 'despacho':
+        return <Dispatch />;
       default:
         return <Dashboard />;
     }
   };
 
+  if (!isAuthenticated) {
+    return <LoginPage />;
+  }
+
   return (
     <div className="min-h-screen bg-primary-white">
+      {/* Navegación */}
       <nav className="bg-primary-blue shadow-lg">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between h-16">
-            <div className="flex space-x-8">
-              <motion.div 
-                className="flex-shrink-0 flex items-center"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <h1 className="text-xl font-bold text-primary-navy">Sistema de Inventario</h1>
-              </motion.div>
+            {/* Título del sistema */}
+            <motion.div 
+              className="flex-shrink-0 flex items-center"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h1 className="text-xl font-bold text-primary-navy">Sistema de Inventario</h1>
+            </motion.div>
+
+            {/* Pestañas de navegación */}
+            {user?.role === 'admin' ? (
               <div className="hidden md:flex space-x-8">
-                {['inicio', 'inventario', 'despacho', 'recepcion','productores',].map((tab) => (
+                {['dashboard', 'inventario', 'productores', 'recepcion', 'despacho'].map((tab) => (
                   <motion.button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
@@ -52,20 +69,36 @@ function App() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    {tab === 'inicio' && <LayoutDashboard className="w-5 h-5 mr-2" />}
+                    {tab === 'dashboard' && <LayoutDashboard className="w-5 h-5 mr-2" />}
                     {tab === 'inventario' && <ClipboardList className="w-5 h-5 mr-2" />}
-                    {tab === 'despacho' && <TruckIcon className="w-5 h-5 mr-2" />}
-                    {tab === 'recepcion' && <PackageCheck className="w-5 h-5 mr-2" />}
                     {tab === 'productores' && <Users className="w-5 h-5 mr-2" />}
+                    {tab === 'recepcion' && <Users className="w-5 h-5 mr-2" />}
+                    {tab === 'despacho' && <Users className="w-5 h-5 mr-2" />}
                     {tab.charAt(0).toUpperCase() + tab.slice(1)}
                   </motion.button>
                 ))}
               </div>
-            </div>
+            ) : (
+              <div className="flex items-center">
+                <span className="text-primary-navy">Total Leche por Productor</span>
+              </div>
+            )}
+
+            {/* Botón de cerrar sesión */}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={logout}
+              className="flex items-center px-3 py-2 rounded text-primary-navy hover:bg-primary-navy/10"
+            >
+              <LogOut className="w-5 h-5 mr-2" />
+              Cerrar Sesión
+            </motion.button>
           </div>
         </div>
       </nav>
 
+      {/* Contenido principal */}
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 bg-secondary-yellow/10">
         <AnimatePresence mode="wait">
           <motion.div
@@ -80,6 +113,14 @@ function App() {
         </AnimatePresence>
       </main>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 
