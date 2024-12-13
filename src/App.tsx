@@ -12,7 +12,7 @@ import { Dispatch } from './components/Dispatch';
 
 function AppContent() {
   const { isAuthenticated, logout, user } = useAuth();
-  const [activeTab, setActiveTab] = React.useState('dashboard');
+  const [activeTab, setActiveTab] = React.useState('inventario');
 
   // Renderiza el contenido según la pestaña activa y el rol del usuario
   const renderContent = () => {
@@ -29,8 +29,10 @@ function AppContent() {
         return <Reception />;
       case 'despacho':
         return <Dispatch />;
-      default:
+      case 'dashboard':
         return <Dashboard />;
+      default:
+        return <Inventory />;
     }
   };
 
@@ -51,13 +53,13 @@ function AppContent() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h1 className="text-xl font-bold text-primary-navy">Sistema de Inventario</h1>
+              <h1 className="text-xl font-bold text-primary-navy">LactoGestion</h1>
             </motion.div>
 
             {/* Pestañas de navegación */}
             {user?.role === 'admin' ? (
               <div className="hidden md:flex space-x-8">
-                {['dashboard', 'inventario', 'productores', 'recepcion', 'despacho'].map((tab) => (
+                {['inventario', 'productores', 'recepcion', 'despacho','dashboard' ].map((tab) => (
                   <motion.button
                     key={tab}
                     onClick={() => setActiveTab(tab)}

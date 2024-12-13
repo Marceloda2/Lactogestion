@@ -32,8 +32,8 @@ export function LoginForm({ onSubmit, error }: LoginFormProps) {
     >
       <form onSubmit={handleSubmit} className="bg-primary-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-primary-navy">Sistema de Inventario</h2>
-          <p className="text-accent-gray">Inicie sesión para continuar</p>
+          <h2 className="text-2xl font-bold text-primary-navy">LactoGestion</h2>
+          <p className="text-accent-black">Inicie sesión para continuar</p>
         </div>
 
         {error && (
