@@ -2,6 +2,7 @@ import axios from 'axios';
 import { logError } from './errorHandling';
 import { LoginCredentials } from '../types/auth';
 import { mockApiService } from './mockApi';
+import { addProducerUser } from './mockUsers';
 
 const API_URL = 'http://localhost:5000/api';
 
@@ -41,9 +42,31 @@ const transformResponse = <T>(data: any[]): T[] => {
 };
 
 export const apiService = {
-  // Auth - Using mock service
+  // Auth
   login: mockApiService.login,
 
+  // Producers
+  addProducer: async (producerData: any) => {
+    // Crear credenciales de usuario para el productor
+    const user = addProducerUser(producerData.codigo, producerData.password);
+    
+    // Simular respuesta de API
+    return {
+      data: [{
+        id: user.id,
+        codigo: producerData.codigo,
+        nombre: producerData.nombre,
+        telefono: producerData.telefono,
+      }]
+    };
+  },
+
   // Rest of the API methods...
-  // [Previous methods remain
-}
+  getProducers: mockApiService.getProducers,
+  getReceptions: mockApiService.getReceptions,
+  getDispatches: mockApiService.getDispatches,
+  addReception: mockApiService.addReception,
+  addDispatch: mockApiService.addDispatch,
+};
+
+export { api };

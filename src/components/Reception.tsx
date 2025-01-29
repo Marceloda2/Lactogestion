@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { api } from '../utils/api';
-
-interface Reception {
-  id: number;
-  codigo: string;
-  nombre: string;
-  volumen: number;
-  tanque: string;
-  densidad: number;
-  alcohol_85: number;
-  antibiotico: string;
-  observaciones: string;
-}
+import { AlertTriangle, CheckCircle } from 'lucide-react';
+import type { MilkReception } from '../types/milk';
 
 export function Reception() {
-  const [receptions, setReceptions] = useState<Reception[]>([]);
+  const [receptions, setReceptions] = useState<MilkReception[]>([]);
 
   useEffect(() => {
     loadReceptions();
@@ -26,19 +17,31 @@ export function Reception() {
       const formattedReceptions = response.data.map((reception: any[]) => ({
         id: reception[0],
         fecha: reception[1],
-        hora_entrada: reception[2],
-        nombre: reception[3],
+        hora: reception[2],
+        proveedor_id: reception[3],
         volumen: reception[4],
         tanque: reception[5],
-        densidad: reception[6],
-        alcohol_85: reception[7],
-        antibiotico: reception[8],
-        observaciones: reception[9],
+        parametros: {
+          temperatura: reception[5],
+          densidad: reception[6],
+          alcohol: reception[8] === '1',
+          antibiotico: reception[9] === '1',
+          observaciones: reception[10] || ''
+        }
       }));
       setReceptions(formattedReceptions);
     } catch (error) {
       console.error('Error loading receptions:', error);
     }
+  };
+
+  const hasQualityIssues = (reception: MilkReception) => {
+    return (
+      reception.parametros.temperatura > 30 ||
+      reception.parametros.densidad < 28 ||
+      reception.parametros.alcohol ||
+      reception.parametros.antibiotico
+    );
   };
 
   return (
@@ -51,7 +54,7 @@ export function Reception() {
                 Fecha
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-primary-navy uppercase tracking-wider">
-                Nombre
+                Hora
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-primary-navy uppercase tracking-wider">
                 Volumen
@@ -60,23 +63,82 @@ export function Reception() {
                 Tanque
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-primary-navy uppercase tracking-wider">
-                Densidad
+                Temperatura
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-primary-navy uppercase tracking-wider">
-                Alcohol 85%
+                Densidad
+              </th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-primary-navy uppercase tracking-wider">
+                Alcohol
+              </th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-primary-navy uppercase tracking-wider">
+                Antibiótico
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary-navy uppercase tracking-wider">
+                Estado
               </th>
             </tr>
           </thead>
           <tbody className="bg-primary-white divide-y divide-accent-gray">
             {receptions.map((reception) => (
-              <tr key={reception.id} className="hover:bg-secondary-yellow/5">
-                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{reception.fecha}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{reception.nombre}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{reception.volumen} L</td>
-                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{reception.tanque}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{reception.densidad}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">{reception.alcohol_85}%</td>
-              </tr>
+              <motion.tr
+                key={reception.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className={`hover:bg-secondary-yellow/5 ${
+                  hasQualityIssues(reception) ? 'bg-accent-red/5' : ''
+                }`}
+              >
+                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">
+                  {new Date(reception.fecha).toLocaleDateString()}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">
+                  {reception.hora}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">
+                  {reception.volumen} L
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-primary-navy">
+                  {reception.tanque}
+                </td>
+                <td className={`px-6 py-4 whitespace-nowrap ${
+                  reception.parametros.temperatura > 30 ? 'text-accent-red' : 'text-primary-navy'
+                }`}>
+                  {reception.parametros.temperatura}°C
+                </td>
+                <td className={`px-6 py-4 whitespace-nowrap ${
+                  reception.parametros.densidad < 28 ? 'text-accent-red' : 'text-primary-navy'
+                }`}>
+                  {reception.parametros.densidad}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-center">
+                  {reception.parametros.alcohol ? (
+                    <AlertTriangle className="text-accent-red inline" size={20} />
+                  ) : (
+                    <CheckCircle className="text-secondary-green inline" size={20} />
+                  )}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-center">
+                  {reception.parametros.antibiotico ? (
+                    <AlertTriangle className="text-accent-red inline" size={20} />
+                  ) : (
+                    <CheckCircle className="text-secondary-green inline" size={20} />
+                  )}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {hasQualityIssues(reception) ? (
+                    <span className="inline-flex items-center gap-1 text-accent-red">
+                      <AlertTriangle size={16} />
+                      Revisar
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 text-secondary-green">
+                      <CheckCircle size={16} />
+                      OK
+                    </span>
+                  )}
+                </td>
+              </motion.tr>
             ))}
           </tbody>
         </table>

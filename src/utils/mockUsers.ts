@@ -13,10 +13,42 @@ export const MOCK_USERS = [
     password: 'user123',
     role: 'user',
   },
+  {
+    id: 3,
+    username: 'Marco',
+    password: '123',
+    role: 'user',
+  },
+  {
+  id: 4,
+  username: 'Marcelo',
+  password: '123',
+  role: 'user',
+},
 ] as const;
 
+// Almacenar productores con sus credenciales
+let producerUsers: Array<{
+  id: number;
+  username: string;
+  password: string;
+  role: string;
+}> = [];
+
+export const addProducerUser = (username: string, password: string) => {
+  const newUser = {
+    id: MOCK_USERS.length + producerUsers.length + 1,
+    username,
+    password,
+    role: 'user',
+  };
+  producerUsers.push(newUser);
+  return newUser;
+};
+
 export const findUser = (username: string, password: string): User | null => {
-  const user = MOCK_USERS.find(
+  // Buscar en usuarios mock y productores
+  const user = [...MOCK_USERS, ...producerUsers].find(
     (u) => u.username === username && u.password === password
   );
   

@@ -6,7 +6,9 @@ def connect_db():
     cursor.execute('''CREATE TABLE IF NOT EXISTS productores (
                         id INTEGER PRIMARY KEY,
                         nombre TEXT,
-                        telefono TEXT)''')
+                        telefono TEXT,
+                        codigo TEXT,
+                        password TEXT)''')
     cursor.execute('''CREATE TABLE IF NOT EXISTS inventario (
                         id INTEGER PRIMARY KEY,
                         productor_id INTEGER,

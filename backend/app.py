@@ -17,8 +17,10 @@ def manage_productores():
         data = request.json
         nombre = data.get('nombre')
         telefono = data.get('telefono')
-        if nombre and telefono:
-            execute_query("INSERT INTO productores (nombre, telefono) VALUES (?, ?)", (nombre, telefono))
+        codigo = data.get('codigo')
+        password = data.get('password')
+        if nombre and telefono and codigo and password:
+            execute_query("INSERT INTO productores (nombre, telefono, codigo, password) VALUES (?, ?, ?, ?)", (nombre, telefono,codigo,password))
             return jsonify({"message": "Productor agregado"}), 201
         return jsonify({"error": "Datos incompletos"}), 400
     productores = fetch_query("SELECT * FROM productores")
