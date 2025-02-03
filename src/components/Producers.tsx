@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PlusCircle, Eye, EyeOff } from 'lucide-react';
-import { api } from '../utils/api';
+import api from '../utils/api';
 import { motion } from 'framer-motion';
 import type { Producer } from '../types/milk';
 

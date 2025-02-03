@@ -5,10 +5,11 @@ import { Dashboard } from './components/Dashboard';
 import { Inventory } from './components/Inventory';
 import { Producers } from './components/Producers';
 import { ProducerMilkTotals } from './components/user/ProducerMilkTotals';
-import { ClipboardList, Users, LayoutDashboard, LogOut } from 'lucide-react';
+import { ClipboardList, Users, LayoutDashboard, LogOut, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Reception } from './components/Reception';
 import { Dispatch } from './components/Dispatch';
+import Rejections from './components/Rejections'; // Importar el componente Rejections
 
 function AppContent() {
   const { isAuthenticated, logout, user } = useAuth();
@@ -31,6 +32,8 @@ function AppContent() {
         return <Dispatch />;
       case 'dashboard':
         return <Dashboard />;
+      case 'rechazos': // Agregar el caso para la pestaña de rechazos
+        return <Rejections />;
       default:
         return <Inventory />;
     }
@@ -59,7 +62,7 @@ function AppContent() {
             {/* Pestañas de navegación */}
             {user?.role === 'admin' ? (
               <div className="hidden md:flex space-x-8">
-                {['inventario', 'productores', 'recepcion', 'despacho','dashboard' ].map((tab) => (
+                {['inventario', 'productores', 'recepcion', 'despacho', 'rechazos','dashboard'].map((tab) => ( // Agregar 'rechazos' a la lista de pestañas
                   <motion.button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
@@ -76,6 +79,7 @@ function AppContent() {
                     {tab === 'productores' && <Users className="w-5 h-5 mr-2" />}
                     {tab === 'recepcion' && <Users className="w-5 h-5 mr-2" />}
                     {tab === 'despacho' && <Users className="w-5 h-5 mr-2" />}
+                    {tab === 'rechazos' && <XCircle className="w-5 h-5 mr-2" />}
                     {tab.charAt(0).toUpperCase() + tab.slice(1)}
                   </motion.button>
                 ))}

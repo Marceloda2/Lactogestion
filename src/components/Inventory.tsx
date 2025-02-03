@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../utils/api';
+import api from '../utils/api';
 import { ReceptionForm } from './forms/ReceptionForm';
 import { DispatchForm } from './forms/DispatchForm';
 import { PlusCircle, TruckIcon, PackageCheck, Calculator } from 'lucide-react';

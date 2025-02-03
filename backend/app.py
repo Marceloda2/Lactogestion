@@ -43,6 +43,7 @@ def manage_inventario():
         return jsonify({"error": "Datos incompletos"}), 400
     inventario = fetch_query("SELECT * FROM inventario")
     return jsonify(inventario)
+
 @app.route('/api/recepcion', methods=['GET', 'POST'])
 def manage_recepcion():
     if request.method == 'POST':
@@ -55,13 +56,14 @@ def manage_recepcion():
         densidad = data.get('densidad')
         alcohol_85 = data.get('alcohol_85')
         antibiotico = data.get('antibiotico')
+        temperatura = data.get('temperatura')
         observaciones = data.get('observaciones')
         if fecha and hora_entrada and nombre and volumen:
             execute_query(
                 '''INSERT INTO recepcion 
-                   (fecha, hora_entrada, nombre, volumen, tanque, densidad, alcohol_85, antibiotico, observaciones) 
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                (fecha, hora_entrada, nombre, volumen, tanque, densidad, alcohol_85, antibiotico, observaciones)
+                   (fecha, hora_entrada, nombre, volumen, tanque, densidad, alcohol_85, antibiotico, temperatura, observaciones) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                (fecha, hora_entrada, nombre, volumen, tanque, densidad, alcohol_85, antibiotico, temperatura, observaciones)
             )
             return jsonify({"message": "Recepción registrada"}), 201
         return jsonify({"error": "Datos incompletos"}), 400
@@ -92,18 +94,40 @@ def manage_despacho():
         return jsonify({"error": "Datos incompletos"}), 400
     despacho = fetch_query("SELECT * FROM despacho")
     return jsonify(despacho)
+
+@app.route('/api/rechazos', methods=['GET', 'POST'])
+def manage_rechazos():
+    if request.method == 'POST':
+        data = request.json
+        fecha = data.get('fecha')
+        hora = data.get('hora')
+        motivo = data.get('motivo')
+        observaciones = data.get('observaciones')
+        reception_id = data.get('reception_id')
+        if fecha and hora and motivo:
+            execute_query(
+                "INSERT INTO rechazos (fecha, hora, motivo, observaciones, reception_id) VALUES (?, ?, ?, ?, ?)",
+                (fecha, hora, motivo, observaciones, reception_id)
+            )
+            execute_query("DELETE FROM recepcion WHERE id = ?", (reception_id,))
+            return jsonify({"message": "Rechazo registrado y recepción eliminada"}), 201
+        return jsonify({"error": "Datos incompletos"}), 400
+    rechazos = fetch_query("SELECT * FROM rechazos")
+    return jsonify(rechazos)
+
+
 @app.route('/api/recepcion/<int:id>', methods=['PUT', 'DELETE'])
 def modify_recepcion(id):
     if request.method == 'PUT':
         data = request.json
         query = '''UPDATE recepcion 
                    SET fecha = ?, hora_entrada = ?, nombre = ?, volumen = ?, 
-                       tanque = ?, densidad = ?, alcohol_85 = ?, antibiotico = ?, observaciones = ? 
+                       tanque = ?, densidad = ?, alcohol_85 = ?, antibiotico = ?, temperatura = ?, observaciones = ? 
                    WHERE id = ?'''
         params = (
             data.get('fecha'), data.get('hora_entrada'), data.get('nombre'), data.get('volumen'),
             data.get('tanque'), data.get('densidad'), data.get('alcohol_85'), data.get('antibiotico'),
-            data.get('observaciones'), id
+            data.get('temperatura'), data.get('observaciones'), id
         )
         execute_query(query, params)
         return jsonify({"message": "Recepción actualizada"}), 200
@@ -128,6 +152,15 @@ def modify_despacho(id):
         return jsonify({"message": "Despacho actualizado"}), 200
     elif request.method == 'DELETE':
         execute_query("DELETE FROM despacho WHERE id = ?", (id,))
+        return jsonify({"message": "Despacho eliminado"}), 200
+
+@app.route('/api/recepcion/<int:id>', methods=['DELETE'])
+def delete_recepcion(id):
+    try:
+        execute_query("DELETE FROM recepcion WHERE id = ?", (id,))
+        return jsonify({"message": "Recepción eliminada"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     connect_db()
