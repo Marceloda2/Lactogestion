@@ -1,13 +1,11 @@
 import axios from 'axios';
 import { logError } from './errorHandling';
-
 const API_URL = 'http://localhost:5000/api';
 
 interface ApiResponse<T> {
   data: T[];
   error?: string;
 }
-
 const handleError = (error: unknown): ApiResponse<any> => {
   const message = error instanceof Error ? error.message : 'An unknown error occurred';
   logError('API', error);
@@ -21,8 +19,7 @@ const transformResponse = <T>(data: any[]): T[] => {
   }
   return data;
 };
-
-export const api = {
+const api = {
   // Inventory
   getInventory: async (): Promise<ApiResponse<any>> => {
     try {
@@ -94,4 +91,34 @@ export const api = {
       return handleError(error);
     }
   },
+  deleteReception: async (id: number): Promise<ApiResponse<any>> => {
+    try {
+      const response = await axios.delete(`${API_URL}/recepcion/${id}`);
+      return { data: [response.data] };
+    } catch (error) {
+      return handleError(error);
+    }
+  },
+
+  // Rejections
+  getRejections: async (): Promise<ApiResponse<any>> => {
+    try {
+      const response = await axios.get(`${API_URL}/rechazos`);
+      return { data: transformResponse(response.data) };
+    } catch (error) {
+      return handleError(error);
+    }
+  },
+  addRejection: async (data: any): Promise<ApiResponse<any>> => {
+    try {
+      const response = await axios.post(`${API_URL}/rechazos`, data);
+      return { data: [response.data] };
+    } catch (error) {
+      return handleError(error);
+    }
+  },
+  
+  
 };
+
+export default api;

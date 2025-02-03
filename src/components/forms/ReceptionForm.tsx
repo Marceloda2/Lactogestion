@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { PlusCircle } from 'lucide-react';
-import { api } from '../../utils/api';
-
+import api from '../../utils/api';
 
 interface ReceptionFormProps {
   onSuccess: () => void;
@@ -16,15 +15,34 @@ export function ReceptionForm({ onSuccess, onClose }: ReceptionFormProps) {
     nombre: '',
     volumen: '',
     tanque: '',
-    densidad: '',
-    alcohol_85: '',
-    antibiotico: '',
+    densidad: '0',
+    alcohol_85: '0',
+    antibiotico: 'no',
+    temperatura: '',
     observaciones: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const [producers, setProducers] = useState([]);
+
+  useEffect(() => {
+    const fetchProducers = async () => {
+      try {
+        const response = await api.getProducers();
+        setProducers(response.data);
+      } catch (error) {
+        console.error('Error fetching producers:', error);
+      }
+    };
+
+    fetchProducers();
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? (checked ? (name === 'alcohol_85' ? '85' : name === 'densidad' ? '100' : 'si') : 'no') : value,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -43,11 +61,11 @@ export function ReceptionForm({ onSuccess, onClose }: ReceptionFormProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="bg-primary-white rounded-lg shadow-lg p-6"
+      className="bg-primary-white rounded-lg shadow-lg p-6 w-full max-w-lg"
     >
-      <h3 className="text-lg font-semibold mb-4 text-primary-navy">Nueva Recepción</h3>
+      <h3 className="text-lg font-semibold text-primary-navy">Nueva Recepción</h3>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <input
+        <input
           name="fecha"
           type="date"
           className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none"
@@ -63,15 +81,20 @@ export function ReceptionForm({ onSuccess, onClose }: ReceptionFormProps) {
           onChange={handleChange}
           required
         />
-        <input
+        <select
           name="nombre"
-          type="text"
-          placeholder="Nombre"
           className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none"
           value={formData.nombre}
           onChange={handleChange}
           required
-        />
+        >
+          <option value="">Seleccione un productor</option>
+          {producers.map((producer: any) => (
+            <option key={producer[0]} value={producer[1]}>
+              {producer[1]}
+            </option>
+          ))}
+        </select>
         <input
           name="volumen"
           type="number"
@@ -90,22 +113,43 @@ export function ReceptionForm({ onSuccess, onClose }: ReceptionFormProps) {
           onChange={handleChange}
           required
         />
+        <label className="flex items-center">
+          <input
+            name="densidad"
+            type="checkbox"
+            className="mr-2"
+            checked={formData.densidad === '100'}
+            onChange={handleChange}
+          />
+          Densidad 100
+        </label>
+        <label className="flex items-center">
+          <input
+            name="alcohol_85"
+            type="checkbox"
+            className="mr-2"
+            checked={formData.alcohol_85 === '85'}
+            onChange={handleChange}
+          />
+          Alcohol 85%
+        </label>
+        <label className="flex items-center">
+          <input
+            name="antibiotico"
+            type="checkbox"
+            className="mr-2"
+            checked={formData.antibiotico === 'si'}
+            onChange={handleChange}
+          />
+          Antibiótico
+        </label>
         <input
-          name="densidad"
+          name="temperatura"
           type="number"
-          step="0.01"
-          placeholder="Densidad"
+          step="0.1"
+          placeholder="Temperatura (°C)"
           className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none"
-          value={formData.densidad}
-          onChange={handleChange}
-        />
-        <input
-          name="alcohol_85"
-          type="number"
-          step="0.01"
-          placeholder="Alcohol 85%"
-          className="border border-accent-gray rounded p-2 focus:border-primary-blue focus:ring focus:ring-primary-blue/30 outline-none"
-          value={formData.alcohol_85}
+          value={formData.temperatura}
           onChange={handleChange}
         />
         <div className="col-span-2 flex gap-4">

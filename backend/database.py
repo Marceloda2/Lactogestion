@@ -16,7 +16,7 @@ def connect_db():
                         litros REAL,
                         cliente TEXT,
                         FOREIGN KEY (productor_id) REFERENCES productores(id))''')
-      # Tabla de recepción
+# Tabla de recepción
     cursor.execute('''CREATE TABLE IF NOT EXISTS recepcion (
                         id INTEGER PRIMARY KEY,
                         fecha TEXT,
@@ -27,7 +27,9 @@ def connect_db():
                         densidad REAL,
                         alcohol_85 REAL,
                         antibiotico TEXT,
+                        temperatura REAL,
                         observaciones TEXT)''')
+
 
     # Tabla de despacho
     cursor.execute('''CREATE TABLE IF NOT EXISTS despacho (
@@ -41,7 +43,22 @@ def connect_db():
                         responsable TEXT,
                         firma TEXT,
                         observaciones TEXT)''')
-    
+
+    # Tabla de rechazos
+    cursor.execute('''CREATE TABLE IF NOT EXISTS rechazos (
+                        id INTEGER PRIMARY KEY,
+                        fecha TEXT,
+                        hora TEXT,
+                        motivo TEXT,
+                        observaciones TEXT,
+                        reception_id INTEGER)''')
+
+    # Migración para agregar el campo temperatura a la tabla recepcion si no existe
+    cursor.execute("PRAGMA table_info(recepcion)")
+    columns = [column[1] for column in cursor.fetchall()]
+    if 'temperatura' not in columns:
+        cursor.execute("ALTER TABLE recepcion ADD COLUMN temperatura REAL")
+
     conn.commit()
     conn.close()
 

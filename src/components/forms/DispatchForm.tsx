@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { api } from '../../utils/api';
+import api from '../../utils/api';
 import { PlusCircle } from 'lucide-react';
 
 interface DispatchFormProps {
